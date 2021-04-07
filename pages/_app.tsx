@@ -6,6 +6,7 @@ import "@styles/global.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import "@fontsource/raleway/400.css";
+
 import "@fontsource/raleway/500.css";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {

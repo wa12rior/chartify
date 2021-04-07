@@ -83,7 +83,11 @@ export const Header: React.FC = () => {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex
+          flex={{ base: 1 }}
+          justify={{ base: "center", md: "start" }}
+          width="100%"
+        >
           <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
@@ -99,7 +103,7 @@ export const Header: React.FC = () => {
             </Box>
           </Text>
 
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          <Flex display={{ base: "none", md: "flex" }} ml={10} mr="auto">
             <DesktopNav />
           </Flex>
         </Flex>
@@ -114,9 +118,9 @@ export const Header: React.FC = () => {
 
 const DesktopNav = () => {
   return (
-    <Stack direction={"row"} spacing={4}>
+    <Flex direction="row" display={{ base: "none", md: "flex" }}>
       {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label}>
+        <Box key={navItem.label} mr={4}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Link
@@ -150,7 +154,7 @@ const DesktopNav = () => {
           </Popover>
         </Box>
       ))}
-    </Stack>
+    </Flex>
   );
 };
 
