@@ -88,20 +88,14 @@ export const Header: React.FC = () => {
           justify={{ base: "center", md: "start" }}
           width="100%"
         >
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("main.500", "white")}
+          <Box
+            position="absolute"
+            left="50%"
+            top="50%"
+            transform="translate3d(-50%, -50%, 0)"
           >
-            <Box
-              position="absolute"
-              left="50%"
-              top="50%"
-              transform="translate3d(-50%, -50%, 0)"
-            >
-              <Logo />
-            </Box>
-          </Text>
+            <Logo />
+          </Box>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10} mr="auto">
             <DesktopNav />
@@ -118,7 +112,7 @@ export const Header: React.FC = () => {
 
 const DesktopNav = () => {
   return (
-    <Flex direction="row" display={{ base: "none", md: "flex" }}>
+    <Flex direction="row">
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label} mr={4}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
