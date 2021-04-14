@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
     marginLeft: "0.25rem",
   };
   return (
-    <Center bg="main.100" py={10}>
+    <Center bg="main.400" py={10}>
       <Flex flexDirection="column">
         <Flex
           flexDirection="column"
