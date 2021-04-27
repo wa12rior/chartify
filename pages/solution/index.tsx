@@ -9,7 +9,6 @@ import {
   Main,
   Input,
   getMathObject,
-  getZeroOfAFunction,
   Fraction,
   Card,
 } from "@components";
@@ -17,8 +16,13 @@ import { useRouter } from "next/router";
 import { isFunction } from "@chakra-ui/utils";
 import { getYAxisCross } from "../../src/utils";
 
+import "katex/dist/katex.min.css";
+import { InlineMath } from "react-katex";
+
+import { Plot } from "@components/plot";
+
 const Solution: React.FC = () => {
-  const math = getMathObject();
+  const math = getMathObject(true);
 
   const router = useRouter();
   const { expression } = router.query;
@@ -68,7 +72,14 @@ const Solution: React.FC = () => {
         <Skeleton isLoaded={loading}>
           {!errorAlert && (
             <Box>
-              <Card label={"Input:"} expression={<Text>{expression}</Text>} />
+              <Card
+                label={"Input:"}
+                expression={
+                  <Text>
+                    <InlineMath math={expression} />
+                  </Text>
+                }
+              />
               {!isFunc ? (
                 <Card
                   label={"Result:"}
@@ -82,6 +93,7 @@ const Solution: React.FC = () => {
                 />
               ) : (
                 <>
+                  <Plot expression={expression} />
                   <Card
                     label={"Roots:"}
                     expression={

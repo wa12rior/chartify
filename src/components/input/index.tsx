@@ -1,4 +1,4 @@
-import { Flex, Button } from "@chakra-ui/react";
+import { Flex, Box, Button } from "@chakra-ui/react";
 import { Input as ChakraInput } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,11 +18,13 @@ export const Input: React.FC = (props) => {
   return (
     <Flex>
       <ChakraInput {...props} onChange={(e) => handleChange(e.target.value)} />
-      <Link href={`/solution?${expression}`}>
-        <Button cursor="pointer" bgColor="primary.500" as="a">
-          Calculate
-        </Button>
-      </Link>
+      <Box ml={4}>
+        <Link href={`/solution?${expression}`}>
+          <Button cursor="pointer" bgColor="primary.500" as="a">
+            Calculate
+          </Button>
+        </Link>
+      </Box>
     </Flex>
   );
 };
