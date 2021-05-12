@@ -14,7 +14,7 @@ import {
 } from "@components";
 import { useRouter } from "next/router";
 import { isFunction } from "@chakra-ui/utils";
-import { getYAxisCross } from "../../src/utils";
+import { getYAxisCross, getDerivative, bisection } from "../../src/utils";
 
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
@@ -30,6 +30,8 @@ const Solution: React.FC = () => {
   let errorAlert = null;
   let computedExpression;
   let isFunc;
+  const derivative = getDerivative(expression);
+
   try {
     computedExpression = math.evaluate(expression);
     isFunc = isFunction(computedExpression);
@@ -93,28 +95,35 @@ const Solution: React.FC = () => {
                 />
               ) : (
                 <>
-                  <Plot expression={expression} />
-                  <Card
-                    label={"Roots:"}
-                    expression={
-                      // <Fraction
-                      //   n={getZeroOfAFunction(expression).n}
-                      //   d={getZeroOfAFunction(expression).d}
-                      //   s={getZeroOfAFunction(expression).s}
-                      // />
-                      <Box>Soon</Box>
-                    }
+                  <Plot
+                    title={"Function plot:"}
+                    expression={expression}
+                    showRoots
                   />
-                  <Card
-                    label={"Y Axis cross value:"}
-                    expression={
-                      <Fraction
-                        n={getYAxisCross(expression).n}
-                        d={getYAxisCross(expression).d}
-                        s={getYAxisCross(expression).s}
+                  {getYAxisCross(expression).n != undefined && (
+                    <Card
+                      label={"Y Axis cross value:"}
+                      expression={
+                        <Fraction
+                          n={getYAxisCross(expression).n}
+                          d={getYAxisCross(expression).d}
+                          s={getYAxisCross(expression).s}
+                        />
+                      }
+                    />
+                  )}
+                  {derivative != undefined && (
+                    <>
+                      <Card
+                        label={"Derivative:"}
+                        expression={<InlineMath>{derivative}</InlineMath>}
                       />
-                    }
-                  />
+                      <Plot
+                        title={"Derivative plot:"}
+                        expression={`f(x) = ${derivative}`}
+                      />
+                    </>
+                  )}
                 </>
               )}
             </Box>

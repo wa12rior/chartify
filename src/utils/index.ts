@@ -1,5 +1,5 @@
 import { create, all } from "mathjs";
-// TODO math.derivative('x^2 + x', 'x') pochodna
+
 export const serialize = (obj) => {
   const str = [];
   for (const p in obj) {
@@ -39,17 +39,17 @@ export const getParser = (fraction?: boolean) => {
   return getMathObject(fraction).parser();
 };
 
-export const getZeroOfAFunction = (expression: string | string[]) => {
-  const parser = getParser(true);
-  // const newExpression = expression.replace("f(x)", 0);
-
-  parser.evaluate("x=0");
-
-  return parser.evaluate("f(x)");
-};
+export const getZeroOfAFunction = (
+  a: number,
+  b: number,
+  expression: string | string[],
+) => bisection(a, b, expression);
 
 export const getYAxisCross = (expression: string | string[]) =>
   calculateFunc(expression, "0");
+
+export const getDerivative = (expression: string | string[]) =>
+  getMathObject().derivative(expression, "x").toString();
 
 export const calculateFunc = (expression: string | string[], x: string) => {
   const parser = getParser(true);
@@ -62,29 +62,67 @@ export const calculateFunc = (expression: string | string[], x: string) => {
     const parser = getParser(false);
     parser.evaluate(expression);
     parser.evaluate("x=" + x);
+
     return parser.evaluate("f(x)");
   }
 };
 
-export const bisection = (a, b, expression: string) => {
+export const calculateFuncNum = (expression: string | string[], x: string) => {
+  const res = calculateFunc(expression, x);
+  return res.n / res.s;
+};
+
+// @TODO zostało poprawić tylko bisekcje
+export const bisection = (a, b, expression: string | string[]) => {
   const EPSILON = 0.01;
 
-  if (calculateFunc(a, expression) * calculateFunc(b, expression) >= 0) {
+  if (calculateFuncNum(expression, 0) === 0) {
+    return 0;
+  }
+
+  if (calculateFuncNum(expression, a) === 0) {
+    return a;
+  }
+
+  if (calculateFuncNum(expression, b) === 0) {
+    return b;
+  }
+
+  if (calculateFuncNum(expression, a) * calculateFuncNum(expression, b) >= 0) {
     return false;
   }
 
-  let c = a;
-  while (b - a >= EPSILON) {
-    // Find middle point
-    c = (a + b) / 2;
+  try {
+    let c = a;
+    while (b - a >= EPSILON) {
+      // Find middle point
+      c = (a + b) / 2;
 
-    // Check if middle point is root
-    if (calculateFunc(c, expression) == 0.0) break;
-    // Decide the side to repeat the steps
-    else if (calculateFunc(c, expression) * calculateFunc(a, expression) < 0)
-      b = c;
-    else a = c;
+      // Check if middle point is root
+      if (calculateFuncNum(expression, c) == 0) {
+        return c;
+      }
+      // Decide the side to repeat the steps
+      else if (
+        calculateFuncNum(expression, c) * calculateFuncNum(expression, a) <
+        0
+      ) {
+        b = c;
+      } else {
+        a = c;
+      }
+    }
+
+    if (
+      parseFloat(c.toFixed(2)) + EPSILON === a ||
+      parseFloat(c.toFixed(2)) + EPSILON === b
+    ) {
+      return false;
+    }
+
+    //prints value of c upto 4 decimal places
+    return c.toFixed(2);
+  } catch (e) {
+    return false;
   }
-  //prints value of c upto 4 decimal places
-  return c.toFixed(4);
 };
