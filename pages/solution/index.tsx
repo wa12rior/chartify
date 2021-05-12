@@ -14,7 +14,12 @@ import {
 } from "@components";
 import { useRouter } from "next/router";
 import { isFunction } from "@chakra-ui/utils";
-import { getYAxisCross, getDerivative, bisection } from "../../src/utils";
+import {
+  getYAxisCross,
+  getDerivative,
+  bisection,
+  changeAbs,
+} from "../../src/utils";
 
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
@@ -78,7 +83,7 @@ const Solution: React.FC = () => {
                 label={"Input:"}
                 expression={
                   <Text>
-                    <InlineMath math={expression} />
+                    <InlineMath math={changeAbs(expression)} />
                   </Text>
                 }
               />
@@ -116,7 +121,9 @@ const Solution: React.FC = () => {
                     <>
                       <Card
                         label={"Derivative:"}
-                        expression={<InlineMath>{derivative}</InlineMath>}
+                        expression={
+                          <InlineMath>{changeAbs(derivative)}</InlineMath>
+                        }
                       />
                       <Plot
                         title={"Derivative plot:"}

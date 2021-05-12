@@ -126,3 +126,53 @@ export const bisection = (a, b, expression: string | string[]) => {
     return false;
   }
 };
+
+export const changeAbs = (str) => {
+  let out = str;
+  let size = str.length;
+  let buf = "";
+  let pos = 0;
+  let parens = 0;
+  let marker = 0;
+
+  while (pos < size) {
+    const tok = peek(4);
+
+    if (parens > 0) {
+      switch (out[pos]) {
+        case "(":
+          parens++;
+          break;
+        case ")":
+          parens--;
+          break;
+      }
+      if (parens > 0) {
+        buf += out[pos];
+      } else {
+        replace(marker, pos, `|${buf}|`);
+        pos = marker;
+        buf = "";
+      }
+    }
+
+    if (tok == "abs(" && parens == 0) {
+      parens = 1;
+      marker = pos;
+      pos += 4;
+    } else {
+      pos++;
+    }
+  }
+
+  return out;
+
+  function peek(size = 1) {
+    return out.substr(pos, size);
+  }
+
+  function replace(from, to, withStr) {
+    out = out.substring(0, from) + withStr + out.substring(to + 1);
+    size = out.length;
+  }
+};
