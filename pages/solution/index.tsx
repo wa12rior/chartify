@@ -11,6 +11,7 @@ import {
   getMathObject,
   Fraction,
   Card,
+  getParser,
 } from "@components";
 import { useRouter } from "next/router";
 import { isFunction } from "@chakra-ui/utils";
@@ -19,6 +20,7 @@ import {
   getDerivative,
   bisection,
   changeAbs,
+  newtonRaphson,
 } from "../../src/utils";
 
 import "katex/dist/katex.min.css";
@@ -37,6 +39,7 @@ const Solution: React.FC = () => {
   let isFunc;
   const derivative = getDerivative(expression);
 
+  //console.log(newtonRaphson(-10, 0.1, 10, 0.001, expression));
   try {
     computedExpression = math.evaluate(expression);
     isFunc = isFunction(computedExpression);

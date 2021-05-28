@@ -32,11 +32,17 @@ interface PlotProps {
 }
 
 export const Plot: React.FC<PlotProps> = ({ expression, title, showRoots }) => {
+  let minimalStep = 0.5;
+  ["sin", "cos", "tan"].filter((item) => {
+    if (expression.includes(item)) minimalStep = 0.1;
+  });
+
   const [data, setData] = useState([]);
   const [min, setMin] = useState(-10);
   const [max, setMax] = useState(10);
-  const [step, setStep] = useState(0.5);
+  const [step, setStep] = useState(minimalStep);
   const [input, setInput] = useState([min, max, step]);
+  const [roots, setRoots] = useState([]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -49,10 +55,36 @@ export const Plot: React.FC<PlotProps> = ({ expression, title, showRoots }) => {
         .range(input[0], input[1] + input[2], input[2])
         .toArray();
 
+      const xRoots = math.range(input[0], input[1] + 1, 1).toArray();
+
       const chart = [];
+      const chunks = [];
 
       let plot = [];
       let counter = 1;
+
+      xRoots.map((x, index) => {
+        let num;
+        const xVal = math.round(x, 3);
+        try {
+          num = math.number(calculateFunc(expression, xVal));
+        } catch (error) {
+          num = calculateFunc(expression, xVal);
+        }
+
+        if (num != "Infinity" && num != "-Infinity" && !isNaN(num)) {
+          if (index != xValues.length - 1) {
+            const nextNum = math.round(xValues[index + 1], 3);
+            if (
+              nextNum != "Infinity" &&
+              nextNum != "-Infinity" &&
+              !isNaN(nextNum)
+            ) {
+              chunks.push([xVal, nextNum]);
+            }
+          }
+        }
+      });
 
       xValues.map(function (x, index) {
         let num;
@@ -62,7 +94,7 @@ export const Plot: React.FC<PlotProps> = ({ expression, title, showRoots }) => {
         } catch (error) {
           num = calculateFunc(expression, xVal);
         }
-        if (num == "Infinity" || num == "-Infinity") {
+        if (num == "Infinity" || num == "-Infinity" || isNaN(num)) {
           counter++;
           chart.push(plot);
           plot = [];
@@ -92,6 +124,22 @@ export const Plot: React.FC<PlotProps> = ({ expression, title, showRoots }) => {
       });
       chart.push(plot);
       setData(chart);
+
+      const r = [];
+
+      chunks.map((arr) => {
+        const zero = getZeroOfAFunction(arr[0], arr[1], expression);
+
+        if (!r.includes(zero) && zero !== false) {
+          r.push(zero);
+        }
+      });
+
+      setRoots(
+        r.filter((item) => {
+          return item !== undefined;
+        }),
+      );
     } catch (err) {
       alert(err);
     }
@@ -245,15 +293,7 @@ export const Plot: React.FC<PlotProps> = ({ expression, title, showRoots }) => {
           />
         </VictoryChart>
       </Flex>
-      {showRoots && (
-        <Card
-          label={"Roots:"}
-          expression={
-            getZeroOfAFunction(min, max, expression)
-            // <Box>Soon</Box>
-          }
-        />
-      )}
+      {showRoots && <Card label={"Roots:"} expression={roots.join(", ")} />}
     </>
   );
 };
