@@ -78,12 +78,6 @@ Use webpack-bundle-analyzer in your Next.js project. Visualize size of webpack o
 
 [Go To Documentation](https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer)
 
-### **React Query**
-
-Hooks for fetching, caching and updating asynchronous data in React.
-
-[Go To Documentation](https://react-query.tanstack.com/overview)
-
 ### **ESLint**
 
 A pluggable and configurable linter tool for identifying and reporting on patterns in JavaScript. Maintain your code quality with ease.
@@ -102,17 +96,6 @@ The concept of lint-staged is to run configured linter (or other) tasks on files
 
 [Go To Documentation](https://github.com/okonet/lint-staged)
 
-### **Jest**
-
-Jest is a delightful JavaScript Testing Framework with a focus on simplicity.
-
-[Go To Documentation](https://jestjs.io/docs/en/getting-started)
-
-### **Cypress**
-
-Fast, easy and reliable testing for anything that runs in a browser.
-
-[Go To Documentation](https://docs.cypress.io/guides/overview/why-cypress.html)
 
 ## License
 
